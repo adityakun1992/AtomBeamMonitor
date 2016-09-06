@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="checkBoxPref"
+        android:title="Night Mode"
+        android:summary="Check for dark version"/>
+    <EditTextPreference
+        android:key="edittext_preference"
+        android:title="URL/IP Address"
+        android:summary="If need to use own URL (In case of dynamic IP)"
+        android:dialogTitle="Enter URL:" />
+
+</PreferenceScreen>
