@@ -40,10 +40,6 @@ import java.util.ArrayList;
  */
 public class GraphFragment extends Fragment {
     private final String LOG_TAG = GraphFragment.class.getSimpleName();
-    boolean initialize;
-    //Animator myAnimation = new Animator();
-    //Animator myAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.text_view);
-    //Animation myAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.text_view);
     private final String dot = ".";
     RelativeLayout layout;
     //FetchPointUpdateTask pointData;
@@ -52,14 +48,12 @@ public class GraphFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(LOG_TAG,"onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(LOG_TAG,"onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_graphical,container,false);
         layout = (RelativeLayout) rootView.findViewById(R.id.graph_layout);
         /*TextView a = new TextView(getActivity());
@@ -69,12 +63,6 @@ public class GraphFragment extends Fragment {
         pointData.execute();
         return rootView;
         //return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        Log.d(LOG_TAG,"onViewCreated");
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -96,18 +84,14 @@ public class GraphFragment extends Fragment {
 
     private class FetchPointUpdateTask extends AsyncTask<Void,String,String>{
         RelativeLayout layout;
-        AnimatorSet s = new AnimatorSet();
         ArrayList<TextView> textVIEWS = new ArrayList<TextView>();
-        ArrayList<TextView> yetText = new ArrayList<TextView>();
 
         public FetchPointUpdateTask(RelativeLayout layout) {
             this.layout = layout;
-            initialize = true;
         }
 
         @Override
         protected String doInBackground(Void... params) {
-            Log.d(LOG_TAG,"doInBackground");
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
@@ -184,7 +168,6 @@ public class GraphFragment extends Fragment {
         private void updateData(String pointDataJSONString)
             throws JSONException{
             ArrayList<Float> point;
-            Log.d(LOG_TAG,"updateData");
             final String YET = "yet";
             final String DONE = "done";
             doneArray.clear();
@@ -218,11 +201,8 @@ public class GraphFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            Log.d(LOG_TAG,"onPostExecute");
-            if (initialize == true){
-                Animation myAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.text_view);
-                if (yetArray.size()!=0)
-                    initialize = false;
+            ArrayList<Animation> myAnimation = new ArrayList<Animation>();
+                layout.removeAllViews();
                 for(int i = 0; i<doneArray.size();i++){
                     textVIEWS.add(new TextView(getActivity()));
                     textVIEWS.get(i).setText(dot);
@@ -231,8 +211,9 @@ public class GraphFragment extends Fragment {
                     textVIEWS.get(i).setY(doneArray.get(i).get(1)*10);
                     textVIEWS.get(i).setTextSize(45);
                     layout.addView(textVIEWS.get(i));
+                    myAnimation.add(AnimationUtils.loadAnimation(getActivity(), R.anim.text_view));
+                    myAnimation.get(i).setStartOffset(i*5);
                 }
-                Log.d(LOG_TAG,"YET::::");
                 for(int i = doneArray.size(); i<doneArray.size()+yetArray.size()-1;i++){
                     textVIEWS.add(new TextView(getActivity()));
                     textVIEWS.get(i).setText(dot);
@@ -240,49 +221,16 @@ public class GraphFragment extends Fragment {
                     textVIEWS.get(i).setX(yetArray.get(i-doneArray.size()).get(0)*10);
                     textVIEWS.get(i).setY(yetArray.get(i-doneArray.size()).get(1)*10);
                     textVIEWS.get(i).setTextSize(45);
-                    //textVIEWS.get(i).setAlpha(0);
                     layout.addView(textVIEWS.get(i));
+                    myAnimation.add(AnimationUtils.loadAnimation(getActivity(), R.anim.text_view));
+                    myAnimation.get(i).setStartOffset(i*5);
                 }
                 for(int i =0; i<textVIEWS.size();i++){
-                    textVIEWS.get(i).startAnimation(myAnimation);
+                    textVIEWS.get(i).startAnimation(myAnimation.get(i));
                 }
-            }
 
             super.onPostExecute(s);
         }
 
     }
-
-
-    /*public class ProgressBarAnimation extends Animation {
-        ArrayList<TextView> TextVIEW = new ArrayList<TextView>();
-        //ArrayList<TextView> yetText = new ArrayList<TextView>();
-        int i = 0;
-        private RelativeLayout layout;
-        private float from;
-        private float  to;
-
-        public ProgressBarAnimation(RelativeLayout layout, ArrayList doneText, ArrayList yetText) {
-            super();
-            this.layout = layout;
-            doneText.addAll(yetText);
-            this.TextVIEW = doneText;
-            //this.yetText = yetText;
-        }
-
-        @Override
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            super.applyTransformation(interpolatedTime, t);
-            float value = from + (to - from) * interpolatedTime;
-            if (i<TextVIEW.size()){
-                layout.addView(TextVIEW.get(i));
-                i++;
-            }
-
-            //percentText.setText(String.valueOf((int)value/100));
-            //progressBar.setProgress((int) value);
-        }
-
-    }*/
-
 }
