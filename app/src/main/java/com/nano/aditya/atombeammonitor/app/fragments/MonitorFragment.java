@@ -141,7 +141,7 @@ public class MonitorFragment extends Fragment {
 
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("http")
-                        .encodedAuthority("192.168.1.13:8080");
+                        .encodedAuthority("192.168.1.7:8080");
                         /*.appendPath("data")
                         .appendPath("2.5")
                         .appendPath("forecast")

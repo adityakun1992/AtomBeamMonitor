@@ -106,7 +106,7 @@ public class GraphFragment extends Fragment {
 
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("http")
-                        .encodedAuthority("192.168.1.13:8080")
+                        .encodedAuthority("192.168.1.7:8080")
                         .appendPath("points");
                 String myUrl = builder.build().toString();
 
@@ -115,7 +115,7 @@ public class GraphFragment extends Fragment {
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestMethod("PUT");
                 urlConnection.connect();
 
                 // Read the input stream into a String
@@ -187,8 +187,8 @@ public class GraphFragment extends Fragment {
                 point.add((float)(-1*yetJSONArray.getJSONArray(i).getDouble(1)));
                 yetArray.add(point);
             }
-            /*for (int i = 0; i <doneArray.size(); i++)
-                Log.i(LOG_TAG,"["+String.valueOf(doneArray.get(i).get(0))+","+String.valueOf(doneArray.get(i).get(1))+"]");*/
+            /*for (int i = 0; i <yetArray.size(); i++)
+                Log.i(LOG_TAG,"["+String.valueOf(yetArray.get(i).get(0))+","+String.valueOf(yetArray.get(i).get(1))+"]");*/
 
 
         }
@@ -202,7 +202,10 @@ public class GraphFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             ArrayList<Animation> myAnimation = new ArrayList<Animation>();
-                layout.removeAllViews();
+            layout.removeAllViews();
+            int offsetTime = 2250/(doneArray.size()+yetArray.size());
+            //int offsetTime = 15;
+            Log.i(LOG_TAG,String.valueOf(offsetTime));
                 for(int i = 0; i<doneArray.size();i++){
                     textVIEWS.add(new TextView(getActivity()));
                     textVIEWS.get(i).setText(dot);
@@ -212,9 +215,9 @@ public class GraphFragment extends Fragment {
                     textVIEWS.get(i).setTextSize(45);
                     layout.addView(textVIEWS.get(i));
                     myAnimation.add(AnimationUtils.loadAnimation(getActivity(), R.anim.text_view));
-                    myAnimation.get(i).setStartOffset(i*5);
+                    myAnimation.get(i).setStartOffset(i*offsetTime);
                 }
-                for(int i = doneArray.size(); i<doneArray.size()+yetArray.size()-1;i++){
+                for(int i = doneArray.size(); i<doneArray.size()+yetArray.size();i++){
                     textVIEWS.add(new TextView(getActivity()));
                     textVIEWS.get(i).setText(dot);
                     textVIEWS.get(i).setTextColor(Color.parseColor("#FF0000"));
@@ -223,7 +226,7 @@ public class GraphFragment extends Fragment {
                     textVIEWS.get(i).setTextSize(45);
                     layout.addView(textVIEWS.get(i));
                     myAnimation.add(AnimationUtils.loadAnimation(getActivity(), R.anim.text_view));
-                    myAnimation.get(i).setStartOffset(i*5);
+                    myAnimation.get(i).setStartOffset(i*offsetTime);
                 }
                 for(int i =0; i<textVIEWS.size();i++){
                     textVIEWS.get(i).startAnimation(myAnimation.get(i));
