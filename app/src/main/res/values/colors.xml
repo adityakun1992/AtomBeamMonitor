@@ -5,8 +5,11 @@
     <color name="colorAccent">#FF4081</color>
     <color name="background">#FFFFFF</color>
     <color name="textColorPrimary">#000000</color>
+    <color name="textColorSecondary">#424242</color>
+    <color name="windowbackground">#FFFFFF</color>
     <color name="lightgrey">#212121</color>
     <color name="white">#FFFFFF</color>
+    <color name="buttontextcolor">#757575</color>
     <color name="colordialogue">#FFFFFF</color>
     <color name="darkgrey">#424242</color>
 </resources>

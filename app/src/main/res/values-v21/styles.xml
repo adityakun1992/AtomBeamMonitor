@@ -5,7 +5,16 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:textColorSecondary">@color/textColorPrimary</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="alertDialogTheme">@style/editTextDialogStyle</item>
     </style>
+
+    <style name="editTextDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">@color/windowbackground</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="colorAccent">@color/buttontextcolor</item>
+    </style>
+
 </resources>

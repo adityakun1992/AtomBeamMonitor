@@ -39,8 +39,15 @@ public class SettingsActivity extends AppCompatActivity{
         if (darkMode == sharedPreferences.getBoolean("theme",false)){
             super.onBackPressed();
         }
-        else
-            startActivity(new Intent(this, MainActivity.class));
+        else{
+            //startActivity(new Intent(this, MainActivity.class));
+            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+
+        }
+
 
     }
 

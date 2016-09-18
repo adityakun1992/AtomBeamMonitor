@@ -4,8 +4,11 @@
     <color name="colorPrimaryDark">#424242</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#DDDDDD</color>
     <color name="background">#000000</color>
+    <color name="windowbackground">#424242</color>
     <color name="white">#FFFFFF</color>
+    <color name="buttontextcolor">#757575</color>
     <color name="lightgrey">#212121</color>
     <color name="darkgrey">#424242</color>
 </resources>

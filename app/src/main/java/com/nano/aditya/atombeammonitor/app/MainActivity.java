@@ -113,16 +113,6 @@ public class MainActivity extends AppCompatActivity
                 manager.beginTransaction().replace(R.id.fragment_content, new ManualFragment()).addToBackStack("fragback").commit();
             }
         } else if (id == R.id.nav_settings) {
-            /*toolbar.setTitle("Settings");
-            if(getCurrentFragment() instanceof MonitorFragment) {
-                manager.beginTransaction().replace(R.id.fragment_content, new SettingsFragment()).addToBackStack("fragback").commit();
-                //Log.i(LOG_TAG, "Current Fragment is not Settings");
-            }
-            else {
-                toolbar.setTitle("Settings");
-                manager.popBackStack();
-                manager.beginTransaction().replace(R.id.fragment_content, new SettingsFragment()).addToBackStack("fragback").commit();
-            }*/
             Intent intent = new Intent(this, SettingsActivity.class);
             //EditText editText = (EditText) findViewById(R.id.edit_message);
             //String message = editText.getText().toString();

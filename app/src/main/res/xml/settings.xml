@@ -12,7 +12,7 @@
     <EditTextPreference
         android:key="url"
         android:title="URL/IP Address"
-        android:summary="If need to use own URL (In case of dynamic IP)"
+        android:summary="Enter a custom URL (In case of dynamic IP)"
         android:dialogTitle="Enter URL:" />
 
 </PreferenceScreen>
