@@ -1,39 +1,45 @@
 package com.nano.aditya.atombeammonitor.app;
 
 //import android.app.Fragment;
-import android.content.Context;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.nano.aditya.atombeammonitor.app.fragments.ContactFragment;
 import com.nano.aditya.atombeammonitor.app.fragments.GraphFragment;
 import com.nano.aditya.atombeammonitor.app.fragments.ManualFragment;
 import com.nano.aditya.atombeammonitor.app.fragments.MonitorFragment;
-import com.nano.aditya.atombeammonitor.app.fragments.SettingsFragment;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     Toolbar toolbar;
     FragmentManager manager;
+    public String getURL;
+    public boolean darkMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadPreferences();
+        if (darkMode == true){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -106,7 +113,7 @@ public class MainActivity extends AppCompatActivity
                 manager.beginTransaction().replace(R.id.fragment_content, new ManualFragment()).addToBackStack("fragback").commit();
             }
         } else if (id == R.id.nav_settings) {
-            toolbar.setTitle("Settings");
+            /*toolbar.setTitle("Settings");
             if(getCurrentFragment() instanceof MonitorFragment) {
                 manager.beginTransaction().replace(R.id.fragment_content, new SettingsFragment()).addToBackStack("fragback").commit();
                 //Log.i(LOG_TAG, "Current Fragment is not Settings");
@@ -115,7 +122,12 @@ public class MainActivity extends AppCompatActivity
                 toolbar.setTitle("Settings");
                 manager.popBackStack();
                 manager.beginTransaction().replace(R.id.fragment_content, new SettingsFragment()).addToBackStack("fragback").commit();
-            }
+            }*/
+            Intent intent = new Intent(this, SettingsActivity.class);
+            //EditText editText = (EditText) findViewById(R.id.edit_message);
+            //String message = editText.getText().toString();
+            //intent.putExtra(EXTRA_MESSAGE, message);
+            startActivity(intent);
         } else if (id == R.id.nav_contact) {
             toolbar.setTitle("Contact");
             if(getCurrentFragment() instanceof MonitorFragment) {
@@ -141,5 +153,12 @@ public class MainActivity extends AppCompatActivity
     protected Fragment getCurrentFragment() {
         Fragment currentFragment = this.getSupportFragmentManager().findFragmentById(R.id.fragment_content);
         return currentFragment;
+    }
+
+    private void loadPreferences(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        darkMode = sharedPreferences.getBoolean("theme",false);
+        getURL = sharedPreferences.getString("url", "None");
+        //Log.i(LOG_TAG,"getURL="+getURL);
     }
 }

@@ -1,13 +1,10 @@
 package com.nano.aditya.atombeammonitor.app.fragments;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +17,7 @@ import android.view.animation.Transformation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.nano.aditya.atombeammonitor.app.MainActivity;
 import com.nano.aditya.atombeammonitor.app.R;
 
 import org.json.JSONArray;
@@ -75,7 +73,7 @@ public class MonitorFragment extends Fragment {
         int id = Item.getItemId();
         if (id == R.id.action_refresh){
             FetchUpdateTask progressReferesh =new FetchUpdateTask();
-            progressReferesh.execute();
+            progressReferesh.execute(((MainActivity)getActivity()).getURL);
 
             return true;
         }
@@ -85,9 +83,10 @@ public class MonitorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        //String domain = ((MainActivity)getActivity()).getURL;
         FetchUpdateTask progressReferesh =new FetchUpdateTask();
-        progressReferesh.execute();
+        progressReferesh.execute(((MainActivity)getActivity()).getURL);
+
         View rootView = inflater.inflate(R.layout.fragment_monitor, container, false);
         Resources res = getResources();
         //Drawable drawable = res.getDrawable(R.drawable.circular);
@@ -132,6 +131,7 @@ public class MonitorFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String progressDataJSONStr = null;
+            //Log.d(LOG_TAG,"XYZZY"+params[0]);
 
             try {
                 // Construct the URL for the OpenWeatherMap query
@@ -141,7 +141,7 @@ public class MonitorFragment extends Fragment {
 
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("http")
-                        .encodedAuthority("192.168.1.7:8080");
+                        .encodedAuthority(params[0]);
                         /*.appendPath("data")
                         .appendPath("2.5")
                         .appendPath("forecast")
@@ -274,5 +274,6 @@ public class MonitorFragment extends Fragment {
         }
 
     }
+
 
 }

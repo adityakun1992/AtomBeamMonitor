@@ -1,7 +1,5 @@
 package com.nano.aditya.atombeammonitor.app.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,12 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Transformation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nano.aditya.atombeammonitor.app.MainActivity;
 import com.nano.aditya.atombeammonitor.app.R;
 
 import org.json.JSONArray;
@@ -60,7 +57,7 @@ public class GraphFragment extends Fragment {
         a.setText(dot);
         layout.addView(a);*/
         FetchPointUpdateTask pointData = new FetchPointUpdateTask(layout);
-        pointData.execute();
+        pointData.execute(((MainActivity)getActivity()).getURL);
         return rootView;
         //return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -74,7 +71,7 @@ public class GraphFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh){
             FetchPointUpdateTask pointData = new FetchPointUpdateTask(layout);
-            pointData.execute();
+            pointData.execute(((MainActivity)getActivity()).getURL);
 
             return true;
         }
@@ -82,7 +79,7 @@ public class GraphFragment extends Fragment {
     }
 
 
-    private class FetchPointUpdateTask extends AsyncTask<Void,String,String>{
+    private class FetchPointUpdateTask extends AsyncTask<String,String,String>{
         RelativeLayout layout;
         ArrayList<TextView> textVIEWS = new ArrayList<TextView>();
 
@@ -91,7 +88,7 @@ public class GraphFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
@@ -106,7 +103,7 @@ public class GraphFragment extends Fragment {
 
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("http")
-                        .encodedAuthority("192.168.1.7:8080")
+                        .encodedAuthority(params[0])
                         .appendPath("points");
                 String myUrl = builder.build().toString();
 
