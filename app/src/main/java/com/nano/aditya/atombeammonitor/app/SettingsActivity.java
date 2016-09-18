@@ -1,7 +1,10 @@
 package com.nano.aditya.atombeammonitor.app;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 
 import com.nano.aditya.atombeammonitor.app.fragments.SettingsFragment;
@@ -12,9 +15,13 @@ import com.nano.aditya.atombeammonitor.app.fragments.SettingsFragment;
 public class SettingsActivity extends AppCompatActivity{
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     Toolbar toolbar;
+    private boolean darkMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        darkMode = sharedPreferences.getBoolean("theme",false);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         //setTheme(R.style.PreferencesTheme);
@@ -26,11 +33,15 @@ public class SettingsActivity extends AppCompatActivity{
 
     }
 
-    /*@Override
+    @Override
     public void onBackPressed() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (darkMode == sharedPreferences.getBoolean("theme",false)){
+            super.onBackPressed();
+        }
+        else
+            startActivity(new Intent(this, MainActivity.class));
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }*/
+    }
 
 }

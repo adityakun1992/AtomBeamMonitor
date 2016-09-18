@@ -15,7 +15,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public SettingsFragment() {
     }
 
-    public static final String KEY_PREF_EXERCISES = "pref_number_of_exercises";
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.settings);

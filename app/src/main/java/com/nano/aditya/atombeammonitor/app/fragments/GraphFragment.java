@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -82,9 +83,10 @@ public class GraphFragment extends Fragment {
     private class FetchPointUpdateTask extends AsyncTask<String,String,String>{
         RelativeLayout layout;
         ArrayList<TextView> textVIEWS = new ArrayList<TextView>();
-
+        ImageView imageView = new ImageView(getActivity());
         public FetchPointUpdateTask(RelativeLayout layout) {
             this.layout = layout;
+            imageView.setImageResource(R.drawable.border);
         }
 
         @Override
@@ -200,7 +202,7 @@ public class GraphFragment extends Fragment {
         protected void onPostExecute(String s) {
             ArrayList<Animation> myAnimation = new ArrayList<Animation>();
             layout.removeAllViews();
-            int offsetTime = 2250/(doneArray.size()+yetArray.size());
+            int offsetTime = 1250/(doneArray.size()+yetArray.size());
             //int offsetTime = 15;
             Log.i(LOG_TAG,String.valueOf(offsetTime));
                 for(int i = 0; i<doneArray.size();i++){
@@ -228,6 +230,7 @@ public class GraphFragment extends Fragment {
                 for(int i =0; i<textVIEWS.size();i++){
                     textVIEWS.get(i).startAnimation(myAnimation.get(i));
                 }
+
 
             super.onPostExecute(s);
         }
