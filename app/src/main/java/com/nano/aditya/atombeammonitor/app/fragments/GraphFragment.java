@@ -202,9 +202,10 @@ public class GraphFragment extends Fragment {
         protected void onPostExecute(String s) {
             ArrayList<Animation> myAnimation = new ArrayList<Animation>();
             layout.removeAllViews();
-            int offsetTime = 1250/(doneArray.size()+yetArray.size());
-            //int offsetTime = 15;
-            Log.i(LOG_TAG,String.valueOf(offsetTime));
+            int offsetTime = 0;
+            try{
+                offsetTime = 1250/(doneArray.size()+yetArray.size());
+
                 for(int i = 0; i<doneArray.size();i++){
                     textVIEWS.add(new TextView(getActivity()));
                     textVIEWS.get(i).setText(dot);
@@ -230,6 +231,12 @@ public class GraphFragment extends Fragment {
                 for(int i =0; i<textVIEWS.size();i++){
                     textVIEWS.get(i).startAnimation(myAnimation.get(i));
                 }
+            }catch(ArithmeticException e){
+                Log.e(LOG_TAG,"Error", e);
+            }
+            //int offsetTime = 15;
+            //Log.i(LOG_TAG,String.valueOf(offsetTime));
+
 
 
             super.onPostExecute(s);
