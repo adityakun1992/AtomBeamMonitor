@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -70,10 +69,6 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            //manager.popBackStack();
-            //clearBackStack();
-            //manager.beginTransaction().replace(R.id.fragment_content, new MonitorFragment()).commit();
-            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new MonitorFragment()).commit();
         }
     }
 
@@ -94,7 +89,6 @@ public class MainActivity extends AppCompatActivity
             if(getCurrentFragment() instanceof MonitorFragment) {
                 toolbar.setTitle("Graphical Representation");
                 manager.beginTransaction().replace(R.id.fragment_content, new GraphFragment()).addToBackStack("fragback").commit();
-                //Log.i(LOG_TAG, "Current Fragment is not Contact");
             }
             else {
                 toolbar.setTitle("Graphical Representation");
@@ -105,7 +99,6 @@ public class MainActivity extends AppCompatActivity
             toolbar.setTitle("User Manual");
             if (getCurrentFragment() instanceof MonitorFragment){
                 manager.beginTransaction().replace(R.id.fragment_content, new ManualFragment()).addToBackStack("fragback").commit();
-                //Log.i(LOG_TAG, "Current Fragment is not Manual");
             }
             else{
                 toolbar.setTitle("User Manual");
@@ -114,15 +107,11 @@ public class MainActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
-            //EditText editText = (EditText) findViewById(R.id.edit_message);
-            //String message = editText.getText().toString();
-            //intent.putExtra(EXTRA_MESSAGE, message);
             startActivity(intent);
         } else if (id == R.id.nav_contact) {
             toolbar.setTitle("Contact");
             if(getCurrentFragment() instanceof MonitorFragment) {
                 manager.beginTransaction().replace(R.id.fragment_content, new ContactFragment()).addToBackStack("fragback").commit();
-                //Log.i(LOG_TAG, "Current Fragment is not Contact");
             }
             else {
                 toolbar.setTitle("Contact");
@@ -149,6 +138,5 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         darkMode = sharedPreferences.getBoolean("theme",false);
         getURL = sharedPreferences.getString("url", "None");
-        //Log.i(LOG_TAG,"getURL="+getURL);
     }
 }

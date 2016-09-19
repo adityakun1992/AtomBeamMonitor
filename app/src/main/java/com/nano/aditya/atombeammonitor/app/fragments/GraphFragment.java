@@ -1,5 +1,7 @@
 package com.nano.aditya.atombeammonitor.app.fragments;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -38,11 +40,12 @@ import java.util.ArrayList;
  */
 public class GraphFragment extends Fragment {
     private final String LOG_TAG = GraphFragment.class.getSimpleName();
+    ArrayList<TextView> textVIEWS = new ArrayList<TextView>();
     private final String dot = ".";
     RelativeLayout layout;
     //FetchPointUpdateTask pointData;
-    ArrayList<ArrayList<Float>> doneArray = new ArrayList<ArrayList<Float>>();
-    ArrayList<ArrayList<Float>> yetArray = new ArrayList<ArrayList<Float>>();
+    private ArrayList<ArrayList<Float>> olddoneArray = new ArrayList<ArrayList<Float>>();
+    private ArrayList<ArrayList<Float>> oldyetArray = new ArrayList<ArrayList<Float>>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,7 @@ public class GraphFragment extends Fragment {
         a.setText(dot);
         layout.addView(a);*/
         FetchPointUpdateTask pointData = new FetchPointUpdateTask(layout);
-        pointData.execute(((MainActivity)getActivity()).getURL);
+        pointData.execute(((MainActivity)getActivity()).getURL,"new");
         return rootView;
         //return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -72,7 +75,7 @@ public class GraphFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh){
             FetchPointUpdateTask pointData = new FetchPointUpdateTask(layout);
-            pointData.execute(((MainActivity)getActivity()).getURL);
+            pointData.execute(((MainActivity)getActivity()).getURL,"old");
 
             return true;
         }
@@ -82,10 +85,16 @@ public class GraphFragment extends Fragment {
 
     private class FetchPointUpdateTask extends AsyncTask<String,String,String>{
         RelativeLayout layout;
-        ArrayList<TextView> textVIEWS = new ArrayList<TextView>();
+        ArrayList<ArrayList<Float>> doneArray;
+        ArrayList<ArrayList<Float>> yetArray;
+
+        boolean newFragment;
         ImageView imageView = new ImageView(getActivity());
         public FetchPointUpdateTask(RelativeLayout layout) {
             this.layout = layout;
+
+            doneArray = new ArrayList<ArrayList<Float>>();
+            yetArray = new ArrayList<ArrayList<Float>>();
             imageView.setImageResource(R.drawable.border);
         }
 
@@ -94,6 +103,9 @@ public class GraphFragment extends Fragment {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
+            if (params[1]=="new"){
+                newFragment = true;
+            }
             // Will contain the raw JSON response as a string.
             String pointDataJSONStr = null;
 
@@ -141,7 +153,7 @@ public class GraphFragment extends Fragment {
                 pointDataJSONStr = buffer.toString();
                 //Log.i(LOG_TAG,pointDataJSONStr);
                 updateData(pointDataJSONStr);
-                return pointDataJSONStr;
+                return params[1];
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attemping
@@ -199,47 +211,76 @@ public class GraphFragment extends Fragment {
         }*/
 
         @Override
-        protected void onPostExecute(String s) {
-            ArrayList<Animation> myAnimation = new ArrayList<Animation>();
-            layout.removeAllViews();
-            int offsetTime = 0;
-            try{
-                offsetTime = 1250/(doneArray.size()+yetArray.size());
+        protected void onPostExecute(String newFragment) {
 
-                for(int i = 0; i<doneArray.size();i++){
-                    textVIEWS.add(new TextView(getActivity()));
-                    textVIEWS.get(i).setText(dot);
-                    textVIEWS.get(i).setTextColor(Color.parseColor("#00FF00"));
-                    textVIEWS.get(i).setX(doneArray.get(i).get(0)*10);
-                    textVIEWS.get(i).setY(doneArray.get(i).get(1)*10);
-                    textVIEWS.get(i).setTextSize(45);
-                    layout.addView(textVIEWS.get(i));
-                    myAnimation.add(AnimationUtils.loadAnimation(getActivity(), R.anim.text_view));
-                    myAnimation.get(i).setStartOffset(i*offsetTime);
+            Log.d(LOG_TAG,"OLD DONE ARRAY SIZE:"+ String.valueOf(olddoneArray.size()));
+            Log.d(LOG_TAG,"OLD YET ARRAY SIZE:"+ String.valueOf(oldyetArray.size()));
+            Log.d(LOG_TAG,"NEW DONE ARRAY SIZE:"+ String.valueOf(doneArray.size()));
+            Log.d(LOG_TAG,"NEW YET ARRAY SIZE:"+ String.valueOf(yetArray.size()));
+
+            if (newFragment == "new" || (olddoneArray.size()+oldyetArray.size()) != doneArray.size()+yetArray.size() ||
+                    olddoneArray.size()>doneArray.size() || oldyetArray.size()<yetArray.size()){
+                ArrayList<Animation> myAnimation = new ArrayList<Animation>();
+                textVIEWS = new ArrayList<TextView>();
+                layout.removeAllViews();
+                int offsetTime = 0;
+                try{
+                    offsetTime = 2000/(doneArray.size()+yetArray.size());
+                    //offsetTime=25;
+                    for(int i = 0; i<doneArray.size();i++){
+                        textVIEWS.add(new TextView(getActivity()));
+                        textVIEWS.get(i).setText(dot);
+                        textVIEWS.get(i).setTextColor(Color.parseColor("#00FF00"));
+                        textVIEWS.get(i).setX(doneArray.get(i).get(0)*13);
+                        textVIEWS.get(i).setY(doneArray.get(i).get(1)*13);
+                        textVIEWS.get(i).setTextSize(45);
+                        layout.addView(textVIEWS.get(i));
+                        myAnimation.add(AnimationUtils.loadAnimation(getActivity(), R.anim.text_view));
+                        //myAnimation.get(i).setDuration(offsetTime+10);
+                        myAnimation.get(i).setStartOffset(i*offsetTime);
+                    }
+                    for(int i = doneArray.size(); i<doneArray.size()+yetArray.size();i++){
+                        textVIEWS.add(new TextView(getActivity()));
+                        textVIEWS.get(i).setText(dot);
+                        textVIEWS.get(i).setTextColor(Color.parseColor("#FF0000"));
+                        textVIEWS.get(i).setX(yetArray.get(i-doneArray.size()).get(0)*13);
+                        textVIEWS.get(i).setY(yetArray.get(i-doneArray.size()).get(1)*13);
+                        textVIEWS.get(i).setTextSize(45);
+                        layout.addView(textVIEWS.get(i));
+                        myAnimation.add(AnimationUtils.loadAnimation(getActivity(), R.anim.text_view));
+                        //myAnimation.get(i).setDuration(offsetTime+100);
+                        myAnimation.get(i).setStartOffset(i*offsetTime);
+                    }
+                    for(int i =0; i<textVIEWS.size();i++){
+                        textVIEWS.get(i).startAnimation(myAnimation.get(i));
+                    }
+                }catch(ArithmeticException e){
+                    Log.e(LOG_TAG,"Error", e);
                 }
-                for(int i = doneArray.size(); i<doneArray.size()+yetArray.size();i++){
-                    textVIEWS.add(new TextView(getActivity()));
-                    textVIEWS.get(i).setText(dot);
-                    textVIEWS.get(i).setTextColor(Color.parseColor("#FF0000"));
-                    textVIEWS.get(i).setX(yetArray.get(i-doneArray.size()).get(0)*10);
-                    textVIEWS.get(i).setY(yetArray.get(i-doneArray.size()).get(1)*10);
-                    textVIEWS.get(i).setTextSize(45);
-                    layout.addView(textVIEWS.get(i));
-                    myAnimation.add(AnimationUtils.loadAnimation(getActivity(), R.anim.text_view));
-                    myAnimation.get(i).setStartOffset(i*offsetTime);
-                }
-                for(int i =0; i<textVIEWS.size();i++){
-                    textVIEWS.get(i).startAnimation(myAnimation.get(i));
-                }
-            }catch(ArithmeticException e){
-                Log.e(LOG_TAG,"Error", e);
             }
+            else{
+                int new_printed = doneArray.size()-olddoneArray.size();
+                Log.i(LOG_TAG,"new_printed="+String.valueOf(new_printed));
+                if (new_printed>0){
+                    for (int i=olddoneArray.size();i<new_printed+olddoneArray.size(); i++){
+                        Log.i(LOG_TAG,"i="+String.valueOf(i));
+                        textVIEWS.get(i).setTextColor(Color.parseColor("#00FF00"));
+                        ObjectAnimator colorAnim = ObjectAnimator.ofInt(textVIEWS.get(i), "textColor",
+                                Color.RED, Color.GREEN);
+                        colorAnim.setDuration(500);
+                        colorAnim.setEvaluator(new ArgbEvaluator());
+                        colorAnim.start();
+
+                    }
+                }
+            }
+
+            olddoneArray = new ArrayList<ArrayList<Float>>(doneArray);
+            oldyetArray = new ArrayList<ArrayList<Float>>(yetArray);
             //int offsetTime = 15;
             //Log.i(LOG_TAG,String.valueOf(offsetTime));
 
 
-
-            super.onPostExecute(s);
         }
 
     }
