@@ -8,11 +8,13 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 
 import com.nano.aditya.atombeammonitor.app.fragments.SettingsFragment;
+import com.ti.aditya.swipecloseactivity.lib.SwipeCloseActivity;
+import com.ti.aditya.swipecloseactivity.lib.SwipeCloseLayout;
 
 /**
  * Created by adity on 9/17/2016.
  */
-public class SettingsActivity extends AppCompatActivity{
+public class SettingsActivity extends SwipeCloseActivity{
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     Toolbar toolbar;
     private boolean darkMode;
@@ -28,7 +30,7 @@ public class SettingsActivity extends AppCompatActivity{
 
         toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        setDragEdge(SwipeCloseLayout.DragEdge.LEFT);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_content, new SettingsFragment()).commit();
 
     }
