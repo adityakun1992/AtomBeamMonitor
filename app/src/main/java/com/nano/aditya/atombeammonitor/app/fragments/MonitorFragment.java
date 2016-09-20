@@ -45,7 +45,7 @@ public class MonitorFragment extends Fragment {
     ArrayList<Integer> point = new ArrayList<Integer>();
 
     private ProgressBar mProgress;
-    private TextView percentText, completedPointsTextView, noofPointsTextView;
+    private TextView percentText, completedPointsTextView, noofPointsTextView, messageTextView;
 
     public MonitorFragment() {
         //mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -72,8 +72,8 @@ public class MonitorFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem Item){
         int id = Item.getItemId();
         if (id == R.id.action_refresh){
-            FetchUpdateTask progressReferesh =new FetchUpdateTask();
-            progressReferesh.execute(((MainActivity)getActivity()).getURL);
+            FetchUpdateTask progressRefresh =new FetchUpdateTask();
+            progressRefresh.execute(((MainActivity)getActivity()).getURL);
 
             return true;
         }
@@ -84,24 +84,30 @@ public class MonitorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //String domain = ((MainActivity)getActivity()).getURL;
-        FetchUpdateTask progressReferesh =new FetchUpdateTask();
-        progressReferesh.execute(((MainActivity)getActivity()).getURL);
+        FetchUpdateTask progressRefresh =new FetchUpdateTask();
+        progressRefresh.execute(((MainActivity)getActivity()).getURL);
 
         View rootView = inflater.inflate(R.layout.fragment_monitor, container, false);
         Resources res = getResources();
-        //Drawable drawable = res.getDrawable(R.drawable.circular);
+
         mProgress = (ProgressBar) rootView.findViewById(R.id.circularProgressbar);
         mProgress.setProgress(c_percent);   // Main Progress
+
         percentText = (TextView) rootView.findViewById(R.id.textpercentage);
         percentText.setText(String.valueOf(c_percent));
+
         completedPointsTextView = (TextView) rootView.findViewById(R.id.currentpoints);
         completedPointsTextView.setText(String.valueOf(c_point));
+
         noofPointsTextView = (TextView) rootView.findViewById(R.id.maxpoints);
         noofPointsTextView.setText(String.valueOf(no_of_points));
-        //mProgress.setSecondaryProgress(50); // Secondary Progress
+
+        messageTextView = (TextView) rootView.findViewById(R.id.msg);
+        messageTextView.setText(msg);
+
         mProgress.setMax(10000); // Maximum Progress
-        //mProgress.setProgressDrawable(drawable);
-        //Log.v(LOG_TAG,)
+
+
         return rootView;
     }
 
@@ -120,6 +126,7 @@ public class MonitorFragment extends Fragment {
             percentText.setText(String.valueOf(c_percent));
             completedPointsTextView.setText(String.valueOf(c_point));
             noofPointsTextView.setText(String.valueOf(no_of_points));
+            messageTextView.setText("Status: "+String.valueOf(msg));
         }
 
         @Override
